@@ -23,7 +23,8 @@
     "@backstage/core-plugin-api": "^1.9.3",
     "@backstage/plugin-catalog-react": "^1.12.1",
     "react": "^18.0.2",
-    "react-dom": "^18.0.2"
+    "react-dom": "^18.0.2",
+    "react-router-dom": "^6.0.0"
   },
   "devDependencies": {
     "@backstage/cli": "^0.26.4",

@@ -1,18 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import { useEntity } from '@backstage/plugin-catalog-react';
+import { useApi, configApiRef } from '@backstage/core-plugin-api';
 
-const BASE_DOMAIN = 'apps.ocp.mnlq9.sandbox1332.opentlc.com';
+const CLUSTER_DOMAINS: Record<string, string> = {
+  'a-cluster': 'apps.ocp.hnkwm.sandbox225.opentlc.com',
+  'b-cluster': 'apps.ocp.mnlq9.sandbox1332.opentlc.com',
+  'c-cluster': 'apps.ocp.49dgc.sandbox1447.opentlc.com',
+};
 const NAMESPACE = 'quarkusdroneshop-cicd';
 
-function getTestReportUrl(entityName: string): string {
+function extractDomain(baseUrl: string): string {
+  // "https://backstage-developer-hub-xxx.apps.ocp.yyy.opentlc.com" -> "apps.ocp.yyy.opentlc.com"
+  const match = baseUrl.match(/https?:\/\/[^/]+?\.(apps\..+)/);
+  return match ? match[1] : baseUrl.replace(/^https?:\/\/[^/]+\/.*$/, '');
+}
+
+function getTestReportUrl(entityName: string, cluster: string | undefined, defaultDomain: string): string {
   const appName = entityName.replace(/^quarkusdroneshop-/, '');
-  return `http://${appName}-test-report-${NAMESPACE}.${BASE_DOMAIN}`;
+  const domain = (cluster && CLUSTER_DOMAINS[cluster]) ?? defaultDomain;
+  return `http://${appName}-test-report-${NAMESPACE}.${domain}`;
 }
 
 export const TestReportContent = () => {
   const { entity } = useEntity();
+  const config = useApi(configApiRef);
   const [available, setAvailable] = useState<boolean | null>(null);
-  const reportUrl = getTestReportUrl(entity.metadata.name);
+  const cluster = entity.metadata.annotations?.['backstage.io/kubernetes-cluster'];
+  const defaultDomain = extractDomain(config.getString('app.baseUrl'));
+  const reportUrl = getTestReportUrl(entity.metadata.name, cluster, defaultDomain);
 
   useEffect(() => {
     setAvailable(null);
