@@ -1,1 +1,1 @@
-export { dataCatalogPlugin, DataCatalogContent } from './plugin';
+export { testReportPlugin, TestReportContent } from './plugin';

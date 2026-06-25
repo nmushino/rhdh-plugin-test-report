@@ -4,19 +4,19 @@ import {
 } from '@backstage/core-plugin-api';
 import { rootRouteRef } from './routes';
 
-export const dataCatalogPlugin = createPlugin({
-  id: 'data-catalog',
+export const testReportPlugin = createPlugin({
+  id: 'test-report',
   routes: {
     root: rootRouteRef,
   },
 });
 
-export const DataCatalogContent = dataCatalogPlugin.provide(
+export const TestReportContent = testReportPlugin.provide(
   createComponentExtension({
-    name: 'DataCatalogContent',
+    name: 'TestReportContent',
     component: {
       lazy: () =>
-        import('./components/DataCatalogPage').then(m => m.DataCatalogContent),
+        import('./components/TestReportPage').then(m => m.TestReportContent),
     },
   }),
 );

@@ -1,1 +1,0 @@
-export { DataCatalogContent } from './DataCatalogPage';
